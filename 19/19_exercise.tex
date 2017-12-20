@@ -1,0 +1,45 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+
+\title{CS281 Lecture19 Problem}
+\author{Alexander Munoz}
+\date{December 2017}
+
+\begin{document}
+
+\maketitle
+
+\section{Rejection Sampling Question}
+We are trying to sample from a distribution $p(x)$.
+\subsection{Part a}
+Assume for this part that $p(x)$ has finite support on $x\in[a,b]$ and known maximum $M$. Without a proposal distribution we choose a proposal $\tilde{x}\sim\text{Unif}(a,b)$. Describe a strategy to accept these proposals such that $\tilde{x}\sim p(x)$.
+\subsection{Part b}
+Describe two issues with the above method.
+\subsection{Part c}
+We now decide to implement the method for rejection sampling described in class. We find a proposal function $q(x)$ such that $Mq(x)>p(x)$. Describe what a good proposal functional $q(x)$ would look like.
+\subsection{Part d}
+Calculate the acceptance probability using the proposal and acceptance strategy from the rejection sampling described in class.
+\subsection{Part e}
+Interpret the results from part d, and describe how it affects an ideal choice of $M$.
+
+
+
+\section{Solution}
+\subsection{Part a}
+We want $a(\tilde{x})=p(x)$ where $a(x)$ is the acceptance function. Since $\tilde{x}$ is drawn uniformly over the support, we simply require that the probability of acceptance is proportional to the relative pdf values of $p(x)$. We can do this by sampling $\tilde{y}\sim\text{Unif}(0,M)$. If $\tilde{y}<p(\tilde{x})$, accept the sample. 
+\subsection{Part b}
+\begin{enumerate}
+    \item This requires knowing the maximum (or at least bounding the maximum) of $p(x)$
+    \item Acceptance probability will be very low, we won't get many samples (imagine a very pointed distribution, we will essentially only accept samples if $\tilde{x}$ is on the point of the distribution.
+\end{enumerate}
+\subsection{Part c}
+We want the shape of $q(x)$ to match the shape roughly of $p(x)$. The problem with our previous method of sampling was that we were proposing samples from areas with low probability density on $p(x)$. If we can get the shape of $q(x)$ to match the shape of $p(x)$, we will have a smaller probability of proposing samples in low probability density regions of $p(x)$.
+\subsection{Part d}
+The probability of accepting a sample is the probability of proposing that sample and then accepting it: $q(x)a(x)$. We integrate over $x$ to determine the acceptance probability:
+$$\int q(x)a(x)dx = \int q(x)\frac{p(x)}{Mq(x)}dx = \frac{1}{M}\int p(x)dx = \frac{1}{M}$$
+\subsection{Part e}
+The acceptance probability is inversely proportional to our choice of $M$. We thus want to pick $M$ as close to 1 as possible. Clearly, we can make $M$ arbitarily large to satisfy our constraint that $Mq(x)>p(x)$, but larger M decreases our acceptance probability. By matching the shape of $q(x)$ to $p(x)$ and then making $M$ as close to 1 as possible, we maximize our acceptance probability.
+
+
+\end{document}
